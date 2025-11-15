@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model App {
+  id          String   @id @default(cuid())
+  name        String
+  email  String
+  createdAt   DateTime @default(now())
+  apiKeys     ApiKey[]
+  events      Event[]
+  revoked     Boolean  @default(false)
+}
+
+model ApiKey {
+  id         String   @id @default(cuid())
+  key        String   @unique
+  app        App      @relation(fields: [appId], references: [id])
+  appId      String
+  expiresAt  DateTime?
+  revoked    Boolean  @default(false)
+  createdAt  DateTime @default(now())
+}
+
+model Event {
+  id         String   @id @default(cuid())
+  app        App      @relation(fields: [appId], references: [id])
+  appId      String
+  eventName  String
+  url        String?
+  referrer   String?
+  device     String?
+  ipAddress  String?
+  timestamp  DateTime
+  metadata   Json?
+  userId     String?   // optional user identifier
+  createdAt  DateTime  @default(now())
+
+  @@index([appId, eventName, timestamp])
+  @@index([userId])
+}
