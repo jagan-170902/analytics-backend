@@ -20,8 +20,6 @@ Redis caching for faster analytics queries
 
 PostgreSQL for storing users, apps, and events
 
-Dockerized for easy deployment
-
 💻 Tech Stack:
 
 Node.js (Express)
